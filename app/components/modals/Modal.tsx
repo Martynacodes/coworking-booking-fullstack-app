@@ -45,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({
       onClose();
     }, 300);
     // Using 3sec timeout for my animations to load
-  }, [disabled, onClose]);
+  }, [onClose, disabled]);
 
   const handleSubmit = useCallback(() => {
     if (disabled) {
@@ -67,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div
-        className="
+        className={`
   justify-center
   items-center
   flex
@@ -78,11 +78,11 @@ const Modal: React.FC<ModalProps> = ({
   z-50
   outline-none
   focus:outline-none
-  bg-neutral-800/70
-  "
+  ${showModal ? "bg-neutral-800/70" : ""} 
+  `}
       >
         <div
-          className="
+          className="   
 relative
 w-full
 md:w-4/6
@@ -118,7 +118,7 @@ md:h-auto
                 flex 
                 flex-col 
                 w-full 
-                bg-white 
+                bg-neutral-50 
                 outline-none 
                 focus:outline-none
                 "
@@ -132,7 +132,7 @@ md:h-auto
                 rounded-t
                 justify-center
                 relative
-                border-b-[1px]  "
+                border-b-[1px]"
               >
                 <button
                   className="

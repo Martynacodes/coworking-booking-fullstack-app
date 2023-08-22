@@ -4,14 +4,16 @@ import { Nunito } from "next/font/google";
 import Navbar from "./components/navbar/Navbar";
 import ClientOnly from "./components/ClientOnly";
 import RegisterModal from "./components/modals/RegisterModal";
-const font = Nunito({
-  subsets: ["latin"],
-});
+import ToasterProvider from "./providers/ToasterProvider";
 
 export const metadata: Metadata = {
   title: "NomadDesk",
   description: "Your workspace, any horizon.",
 };
+
+const font = Nunito({
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -22,7 +24,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={font.className}>
         <ClientOnly>
-          <RegisterModal isOpen={true} />
+          <ToasterProvider />
+          <RegisterModal />
           <Navbar />
         </ClientOnly>
         {children}
