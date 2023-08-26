@@ -103,7 +103,7 @@ const RegisterModal = () => {
       text-neutral-500
       text-center
       mt-4
-      font-lint
+      font-light
 
       "
       >

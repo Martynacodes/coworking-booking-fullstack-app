@@ -97,22 +97,22 @@ const LoginModal = () => {
       text-neutral-500
       text-center
       mt-4
-      font-liht
-
+      font-light
       "
       >
-        <div className="justify-center flex flex-row items-center gap-2">
-          <div>Already have an account?</div>
-          <div
-            onClick={registerModal.onClose}
+        <p>
+          First time using Airbnb?
+          <span
             className="
-          text-neutral-800
-          cursor-pointer
-          hover:underline"
+              text-neutral-800
+              cursor-pointer 
+              hover:underline
+            "
           >
-            Log in
-          </div>
-        </div>
+            {" "}
+            Create an account
+          </span>
+        </p>
       </div>
     </div>
   );
