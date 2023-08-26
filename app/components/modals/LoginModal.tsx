@@ -101,7 +101,7 @@ const LoginModal = () => {
       "
       >
         <p>
-          First time using Airbnb?
+          First time using NomadDesk?
           <span
             className="
               text-neutral-800
