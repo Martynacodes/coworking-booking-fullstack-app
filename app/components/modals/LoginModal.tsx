@@ -53,6 +53,11 @@ const LoginModal = () => {
     });
   };
 
+  const toggleModal = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
+
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome back!" subtitle="Log in to your account" />
@@ -103,6 +108,7 @@ const LoginModal = () => {
         <p>
           First time using NomadDesk?
           <span
+            onClick={toggleModal}
             className="
               text-neutral-800
               cursor-pointer 
