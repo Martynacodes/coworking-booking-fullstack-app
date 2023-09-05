@@ -64,11 +64,13 @@ const RentModal = () => {
   const privateOfficeCount = watch("privateOfficeCount");
   const imageSrc = watch("imageSrc");
 
+  // Load the map dynamically, so that it doesn't load on the server.
   const Map = useMemo(
     () =>
       dynamic(() => import("../reusable/Map"), {
         ssr: false,
       }),
+    // Rerender the map every time the location changes.
     [location]
   );
 
@@ -172,7 +174,7 @@ const RentModal = () => {
       <div className="flex flex-col gap-8">
         <Heading
           title="Where is your place located?"
-          subtitle="Help guests find you!"
+          subtitle="Help nomads find you!"
         />
         <CountrySelect
           value={location}
@@ -282,7 +284,7 @@ const RentModal = () => {
     <Modal
       isOpen={rentModal.isOpen}
       onClose={rentModal.onClose}
-      onSubmit={rentModal.onClose}
+      onSubmit={onNext}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
       //   Check if you are on the first step. Then male sure that the secondary action doesn't exist and there's nothing to offer the user (undefined).

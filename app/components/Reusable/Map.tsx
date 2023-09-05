@@ -33,6 +33,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
       className="h-[35vh] rounded-lg"
     >
       <TileLayer url={url} attribution={attribution} />
+      {/* Add a marker to point exactly in the center of the country selected. */}
       {center && <Marker position={center as L.LatLngExpression} />}
     </MapContainer>
   );

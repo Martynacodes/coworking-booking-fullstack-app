@@ -20,3 +20,10 @@ background-color: #F9F9F9
 bg-neutral-50
 font-color:#4831d4 
 bg-indigo-600*/
+
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-pane,
+.leaflet-top {
+  z-index: 0 !important;
+}
