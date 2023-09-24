@@ -9,7 +9,7 @@ declare global {
   var cloudinary: any;
 }
 
-const uploadPreset = "pgc9ehd5";
+const uploadPreset = "tfkxcvc4";
 
 interface ImageUploadProps {
   onChange: (value: string) => void;
@@ -17,6 +17,7 @@ interface ImageUploadProps {
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
+  // Function for a successful upload.
   const handleUpload = useCallback(
     (result: any) => {
       onChange(result.info.secure_url);
@@ -27,14 +28,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   return (
     <CldUploadWidget
       onUpload={handleUpload}
-      uploadPreset={uploadPreset}
+      uploadPreset="tfkxcvc4"
       options={{
         maxFiles: 1,
       }}
     >
+      {/*Destructure open   */}
       {({ open }) => {
         return (
           <div
+            // Call open on click and execute it (it might not exist,  therefore the ? )
             onClick={() => open?.()}
             className="
               relative
@@ -53,18 +56,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
               text-neutral-600
             "
           >
+            {/* This is the icon that shows inside the rectangle where you upload the photo. */}
             <TbPhotoPlus size={50} />
             <div className="font-semibold text-lg">Click to upload</div>
+            {/* Render the image inside the div.
+            The image was uploaded from next/image already. */}
             {value && (
               <div
                 className="
               absolute inset-0 w-full h-full"
               >
+                {/* Clicking on the image opens the Cloudinary widget. */}
                 <Image
                   fill
                   style={{ objectFit: "cover" }}
                   src={value}
-                  alt="House"
+                  alt="Uploaded image"
                 />
               </div>
             )}

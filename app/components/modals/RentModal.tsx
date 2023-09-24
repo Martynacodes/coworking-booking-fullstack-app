@@ -47,8 +47,8 @@ const RentModal = () => {
       category: "",
       location: null,
       guestCount: 1,
-      deskCount: 1,
-      privateOfficeCount: 1,
+      individualDeskCount: 1,
+      privateOfficeCount: 0,
       //   Ensure that imageSrc is the same is in the prisma schema.
       imageSrc: "",
       price: 1,
@@ -60,7 +60,7 @@ const RentModal = () => {
   const category = watch("category");
   const location = watch("location");
   const guestCount = watch("guestCount");
-  const deskCount = watch("deskCount");
+  const individualDeskCount = watch("individualDeskCount");
   const privateOfficeCount = watch("privateOfficeCount");
   const imageSrc = watch("imageSrc");
 
@@ -90,6 +90,12 @@ const RentModal = () => {
     setStep((value) => value + 1);
   };
 
+  // Import SubmitHandler from react-hook-form.
+  // Open "data" props and check if we are on the last step (price).
+  // If we are not on the last step, then go to the next step.
+  // If we are on the last step, then create the listing.
+  // We will set the setIsLoading to "true" and then set axios.
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (step !== STEPS.PRICE) {
       return onNext();
@@ -97,11 +103,15 @@ const RentModal = () => {
 
     setIsLoading(true);
 
+    // Pass in the data that we get from the form.
     axios
       .post("/api/listings", data)
       .then(() => {
         toast.success("Listing created!");
         router.refresh();
+        // When we submit the listing and it's successful,
+        // then we want to reset the form, reset the steps to the first step
+        // and close the modal.
         reset();
         setStep(STEPS.CATEGORY);
         rentModal.onClose();
@@ -196,12 +206,12 @@ const RentModal = () => {
           onChange={(value) => setCustomValue("guestCount", value)}
           value={guestCount}
           title="Guests"
-          subtitle="How many guests do you allow?"
+          subtitle="How many users do you allow?"
         />
         <hr />
         <Counter
-          onChange={(value) => setCustomValue("deskCount", value)}
-          value={deskCount}
+          onChange={(value) => setCustomValue("individualDeskCount", value)}
+          value={individualDeskCount}
           title="Desks"
           subtitle="How many desks do you have?"
         />
@@ -220,8 +230,8 @@ const RentModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Add a photo of your place"
-          subtitle="Show guests what your place looks like!"
+          title="Add a photo of your coworking space"
+          subtitle="Show users what your place looks like!"
         />
         <ImageUpload
           onChange={(value) => setCustomValue("imageSrc", value)}
@@ -235,7 +245,7 @@ const RentModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="How would you describe your desk space?"
+          title="How would you describe your coworking space?"
           subtitle="Short and sweet works best!"
         />
         <Input
@@ -282,15 +292,16 @@ const RentModal = () => {
 
   return (
     <Modal
+      disabled={isLoading}
       isOpen={rentModal.isOpen}
-      onClose={rentModal.onClose}
-      onSubmit={onNext}
+      title="Rent your desk!"
       actionLabel={actionLabel}
+      onSubmit={handleSubmit(onSubmit)}
       secondaryActionLabel={secondaryActionLabel}
       //   Check if you are on the first step. Then male sure that the secondary action doesn't exist and there's nothing to offer the user (undefined).
       // If you are not on the first step, then make sure that the secondary action exists and is a function that will take you back to the previous step.
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
-      title="Rent your desk!"
+      onClose={rentModal.onClose}
       body={bodyContent}
     />
   );
