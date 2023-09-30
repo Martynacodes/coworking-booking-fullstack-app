@@ -1,11 +1,22 @@
 import Container from "./components/reusable/Container";
-import ClientOnly from "./components/ClientOnly";
 import ListingCard from "@/app/components/listings/ListingCard";
 import EmptyState from "@/app/components/EmptyState";
-import getListings from "./actions/getListings";
 
-export default async function Home() {
-  const listings = await getListings();
+import getListings, { IListingsParams } from "@/app/actions/getListings";
+import getCurrentUser from "@/app/actions/getCurrentUser";
+import ClientOnly from "./components/ClientOnly";
+
+interface HomeProps {
+  searchParams: IListingsParams;
+}
+
+const Home = async ({ searchParams }: HomeProps) => {
+  const listings = await getListings(searchParams);
+  // If a user doesn't exist, we will not get an error
+  // Because we didn't throw an error in the getCurrentUser function
+  // Because the homepage is available to signed out users as well
+  const currentUser = await getCurrentUser();
+
   if (listings.length === 0) {
     return (
       <ClientOnly>
@@ -29,11 +40,17 @@ export default async function Home() {
       gap-8
       "
         >
-          {listings.map((listing: any) => {
-            return <ListingCard></ListingCard>;
-          })}
+          {listings.map((listing: any) => (
+            <ListingCard
+              currentUser={currentUser}
+              key={listing.id}
+              data={listing}
+            />
+          ))}
         </div>
       </Container>
     </ClientOnly>
   );
-}
+};
+
+export default Home;

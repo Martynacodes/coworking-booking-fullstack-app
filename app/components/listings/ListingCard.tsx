@@ -28,22 +28,26 @@ const ListingCard: React.FC<ListingCardProps> = ({
   onAction,
   disabled,
   actionLabel,
+  // Default empty string for actionId to avoid "type" errors.
   actionId = "",
   currentUser,
 }) => {
   const router = useRouter();
   const { getByValue } = useCountries();
-
+  // In MongoDB, the location is stored as a single value.
+  // We don't store long/lat, flag etc.
   const location = getByValue(data.locationValue);
 
+  // Will be used in desk/office reservations.
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
 
+      // Stop the reservation if the listing is disabled.
       if (disabled) {
         return;
       }
-
+      // If the listing exists, call the onAction function.
       onAction?.(actionId);
     },
     [disabled, onAction, actionId]
@@ -65,11 +69,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
     const start = new Date(reservation.startDate);
     const end = new Date(reservation.endDate);
 
+    // Use date-fns package to format the date and display it.
+
     return `${format(start, "PP")} - ${format(end, "PP")}`;
   }, [reservation]);
 
   return (
     <div
+      // When the user clicks on the listing card it will redirect to the individual listing page.
       onClick={() => router.push(`/listings/${data.id}`)}
       className="col-span-1 cursor-pointer group"
     >
@@ -95,6 +102,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             src={data.imageSrc}
             alt="Listing"
           />
+          {/* group-hover:scale-110: When the user hovers on any part of the listing card, we will enlarge the image.  */}
           <div
             className="
             absolute
@@ -106,14 +114,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg">
-          {location?.region}, {location?.label}
+          {location?.label}, {location?.region}
         </div>
         <div className="font-light text-neutral-500">
           {reservationDate || data.category}
         </div>
         <div className="flex flex-row items-center gap-1">
           <div className="font-semibold">$ {price}</div>
-          {!reservation && <div className="font-light">night</div>}
+          {!reservation && <div className="font-light">day</div>}
         </div>
         {onAction && actionLabel && (
           <Button
