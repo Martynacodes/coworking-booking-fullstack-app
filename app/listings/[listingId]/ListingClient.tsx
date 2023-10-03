@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Range } from "react-date-range";
 import { useRouter } from "next/navigation";
-import { differenceInDays, eachDayOfInterval } from "date-fns";
+import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { SafeReservation, SafeListing, SafeUser } from "@/app/types";
@@ -38,14 +38,18 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const loginModal = useLoginModal();
   const router = useRouter();
 
+  // Iterate over the reservations and see if there are any dates that need to be disabled for this listing.
   const disabledDates = useMemo(() => {
     let dates: Date[] = [];
 
-    reservations.forEach((reservation: any) => {
+    // Iterate over the reservations and create a range od dates
+    // between start and end date
+    reservations.forEach((reservation) => {
       const range = eachDayOfInterval({
         start: new Date(reservation.startDate),
         end: new Date(reservation.endDate),
       });
+      // And we will pass them to the already existing dates array
       dates = [...dates, ...range];
     });
     return dates;
@@ -74,9 +78,10 @@ const ListingClient: React.FC<ListingClientProps> = ({
         listingId: listing?.id,
       })
       .then(() => {
-        toast.success("Listing reserved successfully");
+        toast.success("Listing reserved successfully.");
         setDateRange(initialDateRange);
-        router.push("/trips");
+        // Redirect to /trips
+        // router.push("/trips");
       })
       .catch(() => {
         toast.error("Something went wrong :(");
@@ -86,9 +91,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
       });
   }, [totalPrice, dateRange, listing?.id, currentUser, loginModal, router]);
 
+  // Calculate the total price based on the date range and listing price
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
-      const dayCount = differenceInDays(dateRange.endDate, dateRange.startDate);
+      const dayCount = differenceInCalendarDays(
+        dateRange.endDate,
+        dateRange.startDate
+      );
 
       if (dayCount && listing.price) {
         setTotalPrice(dayCount * listing.price);
