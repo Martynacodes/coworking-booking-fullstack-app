@@ -44,7 +44,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     // Iterate over the reservations and create a range od dates
     // between start and end date
-    reservations.forEach((reservation) => {
+    reservations.forEach((reservation: any) => {
       const range = eachDayOfInterval({
         start: new Date(reservation.startDate),
         end: new Date(reservation.endDate),
@@ -81,7 +81,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         toast.success("Listing reserved successfully.");
         setDateRange(initialDateRange);
         // Redirect to /trips
-        // router.push("/trips");
+        router.push("/trips");
       })
       .catch(() => {
         toast.error("Something went wrong :(");
