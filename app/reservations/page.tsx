@@ -4,7 +4,7 @@ import ClientOnly from "@/app/components/reusable/ClientOnly";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import getReservations from "@/app/actions/getReservations";
 
-import TripsClient from "./ReservationsClient";
+import ReservationsClient from "./ReservationsClient";
 
 const ReservationsPage = async () => {
   const currentUser = await getCurrentUser();
@@ -16,6 +16,8 @@ const ReservationsPage = async () => {
       </ClientOnly>
     );
   }
+  // Select the author id
+  // We want to load all the reservations that other users have made on out listing
 
   const reservations = await getReservations({ authorId: currentUser.id });
 
@@ -32,7 +34,10 @@ const ReservationsPage = async () => {
 
   return (
     <ClientOnly>
-      <TripsClient reservations={reservations} currentUser={currentUser} />
+      <ReservationsClient
+        reservations={reservations}
+        currentUser={currentUser}
+      />
     </ClientOnly>
   );
 };

@@ -1,4 +1,5 @@
 "use client";
+
 import Avatar from "../reusable/Avatar";
 import MenuItem from "./MenuItem";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
@@ -8,12 +9,14 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { useCallback, useState } from "react";
 import { signOut } from "next-auth/react";
 import { SafeUser } from "@/app/types";
+import { useRouter } from "next/navigation";
 
 interface UserMenuProps {
   currentUser?: SafeUser | null;
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
+  const router = useRouter();
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const rentModal = useRentModal();
@@ -92,7 +95,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
           <div className="flex flex-col cursor-pointer">
             {currentUser ? (
               <>
-                <MenuItem onClick={loginModal.onOpen} label="My destinations" />
+                <MenuItem
+                  onClick={() => router.push("/trips")}
+                  label="My destinations"
+                />
                 <MenuItem onClick={loginModal.onOpen} label="My favorites" />
                 <MenuItem onClick={loginModal.onOpen} label="My reservations" />
                 <MenuItem

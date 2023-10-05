@@ -23,6 +23,7 @@ export async function DELETE(
     throw new Error("Invalid ID");
   }
 
+  // Ensure that the only users that can delete a reservation are either the owner of the listing or the user reserving the listing.
   const reservation = await prisma.reservation.deleteMany({
     where: {
       id: reservationId,

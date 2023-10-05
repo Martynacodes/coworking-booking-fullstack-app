@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import Navbar from "./components/navbar/Navbar";
-import ClientOnly from "./components/ClientOnly";
+import ClientOnly from "./components/reusable/ClientOnly";
 import RentModal from "./components/modals/RentModal";
 import RegisterModal from "./components/modals/RegisterModal";
 import LoginModal from "./components/modals/LoginModal";
