@@ -10,7 +10,7 @@ import { SafeListing, SafeReservation, SafeUser } from "@/app/types";
 
 import HeartButton from "../reusable/HeartButton";
 import Button from "../reusable/Button";
-import ClientOnly from "../ClientOnly";
+import ClientOnly from "../reusable/ClientOnly";
 
 interface ListingCardProps {
   data: SafeListing;
