@@ -17,10 +17,10 @@ export default async function getFavoriteListings() {
         },
       },
     });
-
+    // Sanitize the favorites
     const safeFavorites = favorites.map((favorite) => ({
       ...favorite,
-      createdAt: favorite.createdAt.toString(),
+      createdAt: favorite.createdAt.toISOString(),
     }));
 
     return safeFavorites;

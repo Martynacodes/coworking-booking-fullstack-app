@@ -1,52 +1,31 @@
 import { NextResponse } from "next/server";
 
-import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import prisma from "@/app/libs/prismadb";
 
-export async function POST(request: Request) {
+interface IParams {
+  listingId?: string;
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: IParams }
+) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
     return NextResponse.error();
   }
 
-  // Extract the data from the request
-  const body = await request.json();
-  const {
-    title,
-    description,
-    imageSrc,
-    category,
-    guestCount,
-    individualDeskCount,
-    privateOfficeCount,
-    price,
-    location,
-  } = body;
+  const { listingId } = params;
 
-  // Iterate over all of these items and check whether one of them is missing
+  if (!listingId || typeof listingId !== "string") {
+    throw new Error("Invalid ID");
+  }
 
-  Object.keys(body).forEach((value: any) => {
-    // All of the items are required, so if one is missing, then we'll throw an error
-    if (!body[value]) {
-      NextResponse.error();
-    }
-  });
-
-  // Create the listing
-  const listing = await prisma.listing.create({
-    // Open the data object
-    data: {
-      title,
-      description,
-      imageSrc,
-      category,
-      guestCount,
-      individualDeskCount,
-      privateOfficeCount,
-      locationValue: location.value,
-      // Make sure that the price is an integer
-      price: parseInt(price, 10),
+  const listing = await prisma.listing.deleteMany({
+    where: {
+      id: listingId,
       userId: currentUser.id,
     },
   });

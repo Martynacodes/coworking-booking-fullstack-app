@@ -10,6 +10,7 @@ interface HomeProps {
   searchParams: IListingsParams;
 }
 
+// SearchParams in server components is always an object
 const Home = async ({ searchParams }: HomeProps) => {
   const listings = await getListings(searchParams);
   // If a user doesn't exist, we will not get an error

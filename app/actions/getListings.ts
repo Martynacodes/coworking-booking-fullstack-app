@@ -11,6 +11,8 @@ export interface IListingsParams {
   category?: string;
 }
 
+// Used to fetch all listings on the homepage.
+
 export default async function getListings(params: IListingsParams) {
   try {
     const {
