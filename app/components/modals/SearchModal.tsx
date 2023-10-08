@@ -30,8 +30,8 @@ const SearchModal = () => {
 
   const [location, setLocation] = useState<CountrySelectValue>();
   const [guestCount, setGuestCount] = useState(1);
-  const [roomCount, setRoomCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
+  const [individualDeskCount, setIndividualDeskCount] = useState(1);
+  const [privateOfficeCount, setPrivateOfficeCount] = useState(0);
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
@@ -55,6 +55,8 @@ const SearchModal = () => {
   }, []);
 
   const onSubmit = useCallback(async () => {
+    // Check if we're on the last step
+    // if not, then go to the next step
     if (step !== STEPS.INFO) {
       return onNext();
     }
@@ -66,13 +68,16 @@ const SearchModal = () => {
     }
 
     const updatedQuery: any = {
+      // Spread the current query, everything that exists right now, can be the category for example.
       ...currentQuery,
       locationValue: location?.value,
       guestCount,
-      roomCount,
-      bathroomCount,
+      individualDeskCount,
+      privateOfficeCount,
     };
 
+    // Transform the dates into strings, because they'll go into the URL
+    // That's how we are able to update the server components
     if (dateRange.startDate) {
       updatedQuery.startDate = formatISO(dateRange.startDate);
     }
@@ -80,7 +85,7 @@ const SearchModal = () => {
     if (dateRange.endDate) {
       updatedQuery.endDate = formatISO(dateRange.endDate);
     }
-
+    // Create the final URL
     const url = qs.stringifyUrl(
       {
         url: "/",
@@ -88,9 +93,10 @@ const SearchModal = () => {
       },
       { skipNull: true }
     );
-
+    // Reset the steps and close the modal
     setStep(STEPS.LOCATION);
     searchModal.onClose();
+    // Pushes the stringified URL that uses the query to the router
     router.push(url);
   }, [
     step,
@@ -98,10 +104,10 @@ const SearchModal = () => {
     location,
     router,
     guestCount,
-    roomCount,
+    individualDeskCount,
     dateRange,
     onNext,
-    bathroomCount,
+    privateOfficeCount,
     params,
   ]);
 
@@ -163,19 +169,19 @@ const SearchModal = () => {
         />
         <hr />
         <Counter
-          onChange={(value) => setRoomCount(value)}
-          value={roomCount}
-          title="Rooms"
-          subtitle="How many rooms do you need?"
+          onChange={(value) => setIndividualDeskCount(value)}
+          value={individualDeskCount}
+          title="Desks"
+          subtitle="How many desks do you need?"
         />
         <hr />
         <Counter
           onChange={(value) => {
-            setBathroomCount(value);
+            setPrivateOfficeCount(value);
           }}
-          value={bathroomCount}
+          value={privateOfficeCount}
           title="Bathrooms"
-          subtitle="How many bahtrooms do you need?"
+          subtitle="How many private offices do you need?"
         />
       </div>
     );
@@ -184,12 +190,12 @@ const SearchModal = () => {
   return (
     <Modal
       isOpen={searchModal.isOpen}
+      onClose={searchModal.onClose}
+      onSubmit={onSubmit}
       title="Filters"
       actionLabel={actionLabel}
-      onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.LOCATION ? undefined : onBack}
-      onClose={searchModal.onClose}
       body={bodyContent}
     />
   );

@@ -3,8 +3,8 @@ import prisma from "@/app/libs/prismadb";
 export interface IListingsParams {
   userId?: string;
   guestCount?: number;
-  roomCount?: number;
-  bathroomCount?: number;
+  individualDeskCount?: number;
+  privateOfficeCount?: number;
   startDate?: string;
   endDate?: string;
   locationValue?: string;
@@ -17,9 +17,9 @@ export default async function getListings(params: IListingsParams) {
   try {
     const {
       userId,
-      roomCount,
+      individualDeskCount,
       guestCount,
-      bathroomCount,
+      privateOfficeCount,
       locationValue,
       startDate,
       endDate,
@@ -36,9 +36,11 @@ export default async function getListings(params: IListingsParams) {
       query.category = category;
     }
 
-    if (roomCount) {
-      query.roomCount = {
-        gte: +roomCount,
+    if (individualDeskCount) {
+      query.individualDeskCount = {
+        // This will transform the individualDeskCount that is a string into an integer
+        // We will filter out all the listings that have less desks than we need.
+        gte: +individualDeskCount,
       };
     }
 
@@ -48,9 +50,9 @@ export default async function getListings(params: IListingsParams) {
       };
     }
 
-    if (bathroomCount) {
-      query.bathroomCount = {
-        gte: +bathroomCount,
+    if (privateOfficeCount) {
+      query.privateOfficeCount = {
+        gte: +privateOfficeCount,
       };
     }
 
@@ -58,7 +60,10 @@ export default async function getListings(params: IListingsParams) {
       query.locationValue = locationValue;
     }
 
+    // Create a filter for our dates, so that we only get listings that are available for our select dates.
     if (startDate && endDate) {
+      // We are using reverse filtering.
+
       query.NOT = {
         reservations: {
           some: {

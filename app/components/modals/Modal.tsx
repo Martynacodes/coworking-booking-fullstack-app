@@ -27,7 +27,7 @@ const Modal: React.FC<ModalProps> = ({
   actionLabel,
   disabled,
   secondaryAction,
-  secondaryActionLabel: secondaryActionLabel,
+  secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -67,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div
-        className={`
+        className="
   justify-center
   items-center
   flex
@@ -78,8 +78,7 @@ const Modal: React.FC<ModalProps> = ({
   z-50
   outline-none
   focus:outline-none
-  ${showModal ? "bg-neutral-800/70" : ""} 
-  `}
+  bg-neutral-800/70"
       >
         <div
           className="   
